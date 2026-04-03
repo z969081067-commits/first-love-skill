@@ -1,46 +1,65 @@
 # 初恋.skill
 
-**把记忆里的初恋，做成一个可以对话的 AI Skill。**
+> "如果记忆有形状，它大概是你第一次看向 ta 的那一秒。"
 
-这个项目的目标不是复盘结局，而是把人带回最开始的那一页：第一次见到 ta，第一次认真说话，第一次心动，和那段最亮的时候。
+**把记忆里的初恋，蒸馏成一个可以对话的 AI Skill。**
 
-⚠️ 仅用于个人回忆与情感整理，不用于骚扰、跟踪或替代真实联系。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://python.org)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
+[![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-green)](https://agentskills.io)
 
-[English](README_EN.md)
+提供初恋相关原材料（聊天记录、照片、社交媒体内容）+ 你的主观描述，
+生成一个**真正像 ta 的 AI Skill**：
+用 ta 的说话节奏回复你，记得你们最亮的片段，也保留青涩和留白。
 
-## GitHub 仓库命名建议
+⚠️ **本项目仅用于个人回忆与情感整理，不用于骚扰、跟踪、冒充或侵犯隐私。**
 
-推荐仓库名：`first-love-skill`
+[安装](#安装) · [使用](#使用) · [效果示例](#效果示例) · [功能特性](#功能特性) · [项目结构](#项目结构) · [English](README_EN.md)
+
+---
+
+## 安装
+
+### Claude Code
+
+> **重要**：Claude Code 从 git 仓库根目录的 `.claude/skills/` 查找 skill，请在正确目录执行。
+
+```bash
+# 安装到当前项目（推荐）
+mkdir -p .claude/skills
+git clone https://github.com/<your-username>/first-love-skill .claude/skills/create-first-love
+
+# 或安装到全局（所有项目可用）
+git clone https://github.com/<your-username>/first-love-skill ~/.claude/skills/create-first-love
+```
+
+### 依赖（可选）
+
+```bash
+pip3 install -r requirements.txt
+```
+
+---
 
 ## 使用
 
-在 Claude Code 里输入：
+在 Claude Code 中输入：
 
 ```text
 /create-first-love
 ```
 
-然后按提示提供：
+按流程填写：
 
-1. 关系锚点：代号、认识阶段、最亲近多久、现在停留在哪种状态
-2. 心动记忆：第一次见到 ta、第一次认真说话、第一次心动、最亮的几段片段
-3. 相处画像：ta 怎么说话、怎么靠近人、难过/生气时怎么反应、哪些话题会回避
-4. 原材料：聊天记录、照片、社交媒体、口述回忆
+1. 关系锚点（怎么认识、停在哪个阶段、主要城市/地点）
+2. 心动记忆（第一次见面、第一次认真说话、第一次明确心动）
+3. 相处画像（说话方式、情绪反应、边界与雷区）
+4. 原材料导入（微信 / QQ / 社交媒体 / 照片 / 口述）
 
-每一类问题里都可以继续追问具体细节，重点不是填标签，而是尽量拿到场景、动作、原话、情绪和关系节奏。
-同时会轻量补问几个后续生成要用到的基础字段，比如：怎么认识、主要城市/地点、MBTI、星座；不知道也可以留空。
-在真正生成前，会先把这些回答整理成结构化信息，再写入 `meta.json`、`memory.md`、`persona.md`，以及回复变化层要用到的配置。
+完成后使用 `/first-love-{slug}` 开始对话。
 
-生成后优先用 `/first-love-{slug}` 对话。
-
-现在每个生成出的初恋 skill 还会额外带一份 `response_profile.json`，用于控制“同一个人设内部的自然波动”：
-
-- 不是把回答随机化
-- 而是在不同情境下，对表达模块做带权选择
-- 并对最近使用过的模块做冷却，减少重复腔调
-- 如果这个文件缺失，skill 也会自动回退到 `memory.md` + `persona.md` 的模式，不会直接失效
-
-## 管理命令
+### 管理命令
 
 | 命令 | 说明 |
 |------|------|
@@ -52,30 +71,52 @@
 | `/delete-first-love {slug}` | 删除 |
 | `/seal-summer {slug}` | 温柔删除别名 |
 
-## 核心逻辑
+---
 
-1. 默认身份是“记忆里最清晰的那个版本”。
-2. 重点是初见、心动和靠近，而不是结局。
-3. 回答气质偏初见感、青涩感、时代感，像重新去爱 ta 一遍。
-4. 允许有白月光氛围，但不允许把人写成完美角色。
-5. 核心问题是“最初为什么会喜欢上 ta”。
+## 效果示例
 
-## 回复变化系统
+> 输入：`大学同班，ENFP，双子座，说话很快，半夜会突然发语音，吵完架又会别扭地关心我`
 
-现在这套 skill 还多了一层“回复变化系统”，由三部分组成：
+**场景一：日常聊天**
 
-1. `response_router.md`
-   在真正回复前，先判断当前更像哪种输入类型、关系相位和表达强度。
-2. `response_modules.md`
-   定义主模块和副模块，比如轻轻接话、青涩停顿、反问试探、低压关心、记忆闪回。
-3. `response_profile.json`
-   为某一个具体的初恋保存模块权重、路由偏好、冷却窗口和证据支持下的变化设置。
+```text
+用户      ❯ 在干嘛
+初恋.skill ❯ 刚到家 在楼下买了点水果
+             你呢 怎么突然找我
+```
 
-它的目标不是让 AI “随机乱说”，而是让同一个人设在稳定底色下有自然波动，更像真人，而不是模板。
+**场景二：回忆闪回**
 
-## 输出文件
+```text
+用户      ❯ 你还记得我们第一次一起吃饭吗
+初恋.skill ❯ 记得啊 你当时紧张到筷子都拿反了
+             还嘴硬说是新拿法
+```
 
-每个生成出的初恋 skill 应该包含：
+**场景三：深夜情绪**
+
+```text
+用户      ❯ 我有点想回到以前
+初恋.skill ❯ 嗯
+             先别急着难过
+             你今天是不是又没好好睡觉
+```
+
+---
+
+## 功能特性
+
+### 数据来源
+
+| 来源 | 格式 | 备注 |
+|------|------|------|
+| 微信聊天记录 | txt / html / csv / json / sqlite | 优先推荐，细节密度高 |
+| QQ 聊天记录 | txt / mht / mhtml | 适合校园时期关系 |
+| 社交媒体内容 | 截图 / 文本导出 | 用于补足公开表达风格 |
+| 照片 | JPEG / PNG（含 EXIF） | 提取时间线与地点线索 |
+| 口述回忆 | 纯文本 | 无附件时也可完整生成 |
+
+### 输出结构（每个 `{slug}`）
 
 - `first_loves/{slug}/memory.md`
 - `first_loves/{slug}/persona.md`
@@ -83,41 +124,65 @@
 - `first_loves/{slug}/response_profile.json`
 - `first_loves/{slug}/SKILL.md`
 
+### 回复变化系统（非随机胡说）
+
+- `response_router.md`：判断输入类型、关系相位、表达强度
+- `response_modules.md`：定义主/副表达模块
+- `response_profile.json`：记录模块权重 + 冷却窗口，减少腔调重复
+
+目标是在**人格稳定**前提下，让回复有自然波动。
+
+---
+
+## 安全边界
+
+1. 仅用于个人回忆与情感整理
+2. 不主动联系真人，不替代现实关系
+3. 不鼓励沉迷理想化执念
+4. 数据默认本地处理与存储
+5. 关键表达尽量基于证据，不把 ta 写成完美角色
+
+---
+
 ## 项目结构
 
 ```text
 first-love-skill/
-  ├── SKILL.md
-  ├── README.md
-  ├── README_EN.md
-  ├── INSTALL.md
-  ├── prompts/
-  │   ├── intake.md
-  │   ├── intake_structurer.md
-  │   ├── memory_analyzer.md
-  │   ├── memory_builder.md
-  │   ├── persona_analyzer.md
-  │   ├── persona_builder.md
-  │   ├── response_router.md
-  │   ├── response_modules.md
-  │   └── response_profile_builder.md
-  ├── tools/
-  │   ├── wechat_parser.py
-  │   ├── qq_parser.py
-  │   ├── social_parser.py
-  │   ├── photo_analyzer.py
-  │   ├── skill_writer.py
-  │   ├── version_manager.py
-  │   ├── chat_analysis.py
-  │   └── variability_engine.py
-  ├── docs/
-  └── first_loves/
+├── SKILL.md
+├── README.md
+├── README_EN.md
+├── INSTALL.md
+├── prompts/
+│   ├── intake.md
+│   ├── intake_structurer.md
+│   ├── memory_analyzer.md
+│   ├── memory_builder.md
+│   ├── persona_analyzer.md
+│   ├── persona_builder.md
+│   ├── response_router.md
+│   ├── response_modules.md
+│   ├── response_profile_builder.md
+│   ├── merger.md
+│   └── correction_handler.md
+├── tools/
+│   ├── wechat_parser.py
+│   ├── qq_parser.py
+│   ├── social_parser.py
+│   ├── photo_analyzer.py
+│   ├── chat_analysis.py
+│   ├── variability_engine.py
+│   ├── skill_writer.py
+│   └── version_manager.py
+├── docs/
+└── first_loves/
 ```
 
-## 注意
+---
 
-- 白月光感来自证据、细节和记忆滤镜，不来自胡编乱造
-- 带权变化应该改变“说法”和“靠近方式”，不能改变核心人格事实
-- 如果后续纠正说“ta 不会这样回”，建议同时更新 `persona.md` 和 `response_profile.json`
-- 如果你发现自己越来越沉浸，建议暂停使用
-- 这个 Skill 模拟的是你记忆中的 ta，不是现实中的 ta
+## 致谢与来源说明
+
+- 本项目基于 **[therealXiaomanChu/ex-skill](https://github.com/therealXiaomanChu/ex-skill)** 的思路与工程结构进行修改扩展。
+- 遵循 GitHub 开源社区常见做法：当项目明显来源于上游实现时，在 README 中公开标注来源与灵感，并保留原项目许可协议（本仓库为 MIT）。
+- 同时感谢 ex-skill 所致敬的上游启发项目 **[titanwings/colleague-skill](https://github.com/titanwings/colleague-skill)**。
+
+如果你继续二次开发，也建议在 README 保留这一来源链路，方便社区追溯与致谢。
