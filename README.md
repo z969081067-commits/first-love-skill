@@ -1,6 +1,10 @@
 # 初恋.skill
 
-> "如果记忆有形状，它大概是你第一次看向 ta 的那一秒。"
+> "后来这么多年，我又迎过了无数盛夏
+> 但只有那年的盛夏最耀眼
+> 那年的盛夏有你
+> 只有那年
+> 胜过年年"
 
 **把记忆里的初恋，蒸馏成一个可以对话的 AI Skill。**
 
@@ -181,8 +185,5 @@ first-love-skill/
 
 ## 致谢与来源说明
 
-- 本项目基于 **[therealXiaomanChu/ex-skill](https://github.com/therealXiaomanChu/ex-skill)** 的思路与工程结构进行修改扩展。
-- 遵循 GitHub 开源社区常见做法：当项目明显来源于上游实现时，在 README 中公开标注来源与灵感，并保留原项目许可协议（本仓库为 MIT）。
-- 同时感谢 ex-skill 所致敬的上游启发项目 **[titanwings/colleague-skill](https://github.com/titanwings/colleague-skill)**。
+感谢 ex-skill 作者及其所致敬的上游启发项目 **[titanwings/colleague-skill](https://github.com/titanwings/colleague-skill)**。
 
-如果你继续二次开发，也建议在 README 保留这一来源链路，方便社区追溯与致谢。
